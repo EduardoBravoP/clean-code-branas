@@ -32,6 +32,7 @@ export class AccountDAODatabase implements AccountDAO  {
 		const connection = pgp()("postgres://postgres:123456@localhost:5432/app");
 		const [accountData] = await connection.query("select * from ccca.account where account_id = $1", [accountId]);
 		await connection.$pool.end();
+
 		return {
 			accountId: accountData.account_id,
 			name: accountData.name,
