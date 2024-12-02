@@ -38,3 +38,22 @@ test("Não deve criar uma conta de passageiro com o nome inválido", async funct
     const outputSignup = responseSignup.data;
     expect(outputSignup.message).toBe("Invalid name");
 });
+
+test("Não deve aceitar uma corrida que não foi requisitada", async function () {
+    const input = {
+        name: "John Doe",
+        email: `john.doe${Math.random()}@gmail.com`,
+        cpf: "97456321558",
+        password: "123456",
+        isDriver: true,
+        carPlate: 'AAA1234'
+    }
+    const responseSignup = await axios.post("http://localhost:3000/signup", input);
+    const outputSignup = responseSignup.data;
+
+    const responseAcceptRide = await axios.post(`http://localhost:3000/rides/accept`, {
+        rideId: '123',
+        driverId: outputSignup.driverId
+    });
+    expect(responseAcceptRide.status).toBe(422);
+});

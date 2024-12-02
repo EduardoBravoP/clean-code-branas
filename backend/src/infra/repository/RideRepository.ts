@@ -13,6 +13,9 @@ export default interface RideRepository {
 		rideId: string,
 		passengerId: string
 	): Promise<void>;
+	startRide(
+		rideId: string
+	): Promise<void>;
 }
 
 export class RideRepositoryDatabase implements RideRepository  {
@@ -53,5 +56,9 @@ export class RideRepositoryDatabase implements RideRepository  {
 
 	async acceptRide (rideId: string, driverId: string) {
 		await this.connection.query("update ccca.ride set driver_id = $1, status = 'accepted' where ride_id = $2", [driverId, rideId]);
+	}
+
+	async startRide (rideId: string) {
+		await this.connection.query("update ccca.ride set status = 'in_progress' where ride_id = $1", [rideId]);
 	}
 }

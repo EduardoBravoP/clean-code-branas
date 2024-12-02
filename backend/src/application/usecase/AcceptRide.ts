@@ -14,10 +14,6 @@ export default class AcceptRide {
     if (ride.status !== 'requested') throw new Error("Ride is not requested");
     const driverHasAnActiveRide = await this.rideRepository.hasActiveRideByDriverId(input.driverId);
     if (driverHasAnActiveRide) throw new Error("Driver is already in a ride");
-    // const ride = new Ride(
-    //   input.rideId,
-      
-    // )
 		await this.rideRepository.acceptRide(
       input.rideId,
       input.driverId
