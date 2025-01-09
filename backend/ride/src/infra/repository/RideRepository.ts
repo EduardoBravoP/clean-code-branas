@@ -1,4 +1,3 @@
-import Position from "../../domain/entity/Position";
 import Ride from "../../domain/entity/Ride";
 import DatabaseConnection from "../database/DatabaseConnection";
 
