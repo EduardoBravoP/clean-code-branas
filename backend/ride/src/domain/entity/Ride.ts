@@ -1,6 +1,9 @@
 import crypto from "crypto";
 import Coord from "../vo/Coord";
 import UUID from "../vo/UUID";
+import Position from "./Position";
+import DistanceCalculator from "../service/DistanceCalculator";
+import { FareCalculatorFactory } from "../service/FareCalculator";
 
 export default class Ride {
     private rideId: UUID;
@@ -47,6 +50,17 @@ export default class Ride {
     start () {
         if (this.status !== "accepted") throw new Error("Invalid status");
         this.status = "in_progress";
+    }
+
+    finish (positions: Position[]) {
+        if (this.status !== "in_progress") throw new Error("Invalid status");
+        for (const [index, position] of positions.entries()) {
+            const nextPosition = positions[index + 1];
+            if (!nextPosition) break;
+            this.distance += DistanceCalculator.calculateDistanceBetweenPositions([position, nextPosition]);
+            this.fare += FareCalculatorFactory.create(position.date).calculate(this.distance);
+        }
+        this.status = "completed";
     }
 
     getDistance () {
